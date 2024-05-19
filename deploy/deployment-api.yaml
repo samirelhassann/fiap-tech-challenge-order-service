@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-api
+  labels:
+    app: deployment-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-api
+  template:
+    metadata:
+      labels:
+        app: deployment-api
+    spec:
+      containers:
+      - name: deployment-api
+        image: fiaptechchallenge03acr.azurecr.io/tech-challenge-03
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: "1" 
+            memory: "512Mi" 
+          requests:
+            cpu: "500m" 
+            memory: "256Mi" 
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: POSTGRES_URL
+        - name: MERCADO_PAGO_WEBHOOK_URL
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: MERCADO_PAGO_WEBHOOK_URL
+        - name: MERCADO_PAGO_API_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: MERCADO_PAGO_API_HOST
+        - name: MERCADO_PAGO_BEARER_TOKEN
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: MERCADO_PAGO_BEARER_TOKEN
+        - name: MERCADO_PAGO_USER_ID
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: MERCADO_PAGO_USER_ID
+        - name: MERCADO_PAGO_EXTERNAL_POS_ID
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: MERCADO_PAGO_EXTERNAL_POS_ID
+        
+        # Probes
+        # startupProbe:
+        #   httpGet:
+        #     path: /health-start
+        #     port: 3333
+        #   failureThreshold: 30 
+        #   periodSeconds: 10    
+        #   initialDelaySeconds: 180 # becausa of the memory config 
+        # readinessProbe:
+        #   httpGet:
+        #     path: /health-read
+        #     port: 3333
+        #   initialDelaySeconds: 180 # becausa of the memory config
+        #   periodSeconds: 10
+        #   failureThreshold: 3
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health-live
+        #     port: 3333
+        #   initialDelaySeconds: 180 # becausa of the memory config
+        #   periodSeconds: 10
+        #   failureThreshold: 5 

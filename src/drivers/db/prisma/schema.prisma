@@ -1,0 +1,35 @@
+generator user {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id           String    @id @default(uuid())
+  number       BigInt    @unique @default(autoincrement())
+  user_id      String?
+  visitor_name String?
+  total_price  Decimal
+  payment_id   String?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime? @updatedAt
+
+  @@map("orders")
+}
+
+model OrderComboItem {
+  id          String    @id @default(uuid())
+  order_id    String
+  combo_id    String
+  annotation  String?
+  quantity    Int
+  total_price Decimal
+  created_at  DateTime  @default(now())
+  updated_at  DateTime? @updatedAt
+
+  @@map("order_combo_items")
+}

@@ -1,0 +1,62 @@
+@host = http://localhost:3003
+@service-prefix = order-service
+
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJlNjBhYTA2OC05YWNlLTQ0YTYtYTBjOC0xZjMxMGM3MDkzOTciLCJpYXQiOjE3MTYwODEwODMsImV4cCI6MTcxNjE2NzQ4M30.hssX3xjEJ4mjKuLlnhicGgvaWkqobATsiWcTpeWLS14
+
+# @name get-orders
+GET {{host}}/{{service-prefix}}/orders
+
+###
+
+# @name get-orders-queue
+GET {{host}}/{{service-prefix}}/orders/queue
+
+###
+
+# @name get-order-by-id 
+GET {{host}}/{{service-prefix}}/orders/3641bfa1-0f87-40d9-bf62-678ffeccb3e9
+
+### 
+
+# @name create-order
+POST {{host}}/{{service-prefix}}/orders
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "paymentMethod": "QR_CODE",
+  "paymentStatus": "PENDING_PAYMENT",
+  "combos": [
+    {
+      "sandwichId": "12313",
+      "drinkId": "9",
+      "sideId": "7",
+      "quantity": 2,
+      "annotation": "remove the tomatos"
+    }
+  ]
+}
+
+### 
+
+
+# @name update-order-status
+PATCH {{host}}/{{service-prefix}}/orders/8c292d19-887d-4eb0-b987-d7f8b920d16a
+content-type: application/json
+
+{
+  "status": "READY"
+}
+
+### 
+
+# @name webhook
+POST {{host}}/{{service-prefix}}/orders/webhook
+content-type: application/json
+
+{
+  "resource": "https://api.mercadolibre.com/merchant_orders/15308297344",
+  "topic": "merchant_order"
+}
+
+
