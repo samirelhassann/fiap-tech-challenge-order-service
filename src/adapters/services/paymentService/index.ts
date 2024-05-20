@@ -10,8 +10,6 @@ export class PaymentService implements IPaymentService {
   ): Promise<CreatePaymentResponse> {
     const endpoint = `/create`;
 
-    console.log(`• [LOG] - props`, JSON.stringify(props, null, 2));
-
     return api
       .post<CreatePaymentResponse>(endpoint, {
         ...props,

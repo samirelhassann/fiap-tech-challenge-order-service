@@ -145,10 +145,6 @@ jobs:
           sed -i "/PAYMENT_SERVICE_URL:/c\  PAYMENT_SERVICE_URL: \"$PAYMENT_SERVICE_URL_VALUE\"" ./deploy/configmap-api.yaml
         env:
           KUBECONFIG: ${{ github.workspace }}/kubeconfig
-      - name: Debug ConfigMap
-        run: cat ./deploy/configmap-api.yaml
-        env:
-          KUBECONFIG: ${{ github.workspace }}/kubeconfig          
       - name: Deploy to Kubernetes
         run: |
           export KUBECONFIG=${{ github.workspace }}/kubeconfig
