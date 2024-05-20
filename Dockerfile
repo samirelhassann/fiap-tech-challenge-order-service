@@ -20,4 +20,4 @@ RUN yarn prisma generate
 
 EXPOSE 3003
 
-CMD yarn prisma migrate dev && yarn dev
+CMD yarn dev
