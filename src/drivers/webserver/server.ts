@@ -12,5 +12,5 @@ app
   .then(() => {
     console.log("🚀 HTTP Server Running!");
 
-    console.log(`• [LOG] - env`, JSON.stringify(env, null, 2));
+    console.log(`• [LOG] - Env vars`, JSON.stringify(env, null, 2));
   });
