@@ -3,9 +3,6 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { CreateOrderPresenter } from "@/adapters/presenters/order/CreateOrderPresenter";
 import { GetOrderByIdPresenter } from "@/adapters/presenters/order/GetOrderByIdPresenter";
 import { GetOrdersPresenter } from "@/adapters/presenters/order/GetOrdersPresenter";
-import { GetOrdersQueueFormatedPresenter } from "@/adapters/presenters/order/GetOrdersQueueFormatedPresenter";
-import { OrderWebHookPresenter } from "@/adapters/presenters/order/OrderWebHookPresenter";
-import { UpdateOrderStatusPresenter } from "@/adapters/presenters/order/UpdateOrderStatusPresenter";
 import { IOrderUseCase } from "@/core/useCases/order/IOrderUseCase";
 
 import { GetOrdersViewModel } from "./viewModel/GetOrdersViewModel";
@@ -14,11 +11,8 @@ export class OrderController {
   constructor(
     private orderUseCase: IOrderUseCase,
     private getOrdersPresenter: GetOrdersPresenter,
-    private getOrdersQueueFormatedPresenter: GetOrdersQueueFormatedPresenter,
     private createOrderPresenter: CreateOrderPresenter,
-    private getOrderByIdPresenter: GetOrderByIdPresenter,
-    private updateOrderStatusPresenter: UpdateOrderStatusPresenter,
-    private orderWebHookPresenter: OrderWebHookPresenter
+    private getOrderByIdPresenter: GetOrderByIdPresenter
   ) {}
 
   async getOrders(
@@ -32,22 +26,6 @@ export class OrderController {
         this.getOrdersPresenter.convertErrorResponse(error, res)
       );
   }
-
-  // async getOrdersQueueFormated(
-  //   req: FastifyRequest,
-  //   res: FastifyReply
-  // ): Promise<GetOrdersViewModel> {
-  //   return this.orderUseCase
-  //     .getOrdersQueueFormated(
-  //       this.getOrdersQueueFormatedPresenter.convertToUseCaseDTO(req)
-  //     )
-  //     .then((response) =>
-  //       this.getOrdersQueueFormatedPresenter.sendResponse(res, response)
-  //     )
-  //     .catch((error) =>
-  //       this.getOrdersQueueFormatedPresenter.convertErrorResponse(error, res)
-  //     );
-  // }
 
   async getOrderById(
     req: FastifyRequest,
@@ -71,29 +49,4 @@ export class OrderController {
         this.createOrderPresenter.convertErrorResponse(error, res)
       );
   }
-
-  // async updateOrderStatus(
-  //   req: FastifyRequest,
-  //   res: FastifyReply
-  // ): Promise<UpdateOrderStatusViewModel> {
-  //   return this.orderUseCase
-  //     .updateOrderStatus(
-  //       this.updateOrderStatusPresenter.convertToUseCaseDTO(req)
-  //     )
-  //     .then((response) =>
-  //       this.updateOrderStatusPresenter.sendResponse(res, response)
-  //     )
-  //     .catch((error) =>
-  //       this.updateOrderStatusPresenter.convertErrorResponse(error, res)
-  //     );
-  // }
-
-  // async webhook(req: FastifyRequest, res: FastifyReply): Promise<void> {
-  //   return this.orderUseCase
-  //     .orderWebhook(this.orderWebHookPresenter.convertToUseCaseDTO(req))
-  //     .then(() => this.orderWebHookPresenter.sendResponse(res))
-  //     .catch((error) =>
-  //       this.orderWebHookPresenter.convertErrorResponse(error, res)
-  //     );
-  // }
 }

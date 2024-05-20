@@ -1,12 +1,16 @@
+import { CreatePaymentRequest } from "@/adapters/services/paymentService/model/CreatePaymentRequest";
 import { UniqueEntityId } from "@/core/domain/base/entities/UniqueEntityId";
 import { UnsupportedArgumentValueError } from "@/core/domain/base/errors/entities/UnsupportedArgumentValueError";
 import { MinimumResourcesNotReached } from "@/core/domain/base/errors/useCases/MinimumResourcesNotReached";
 import { Order } from "@/core/domain/entities/Order";
 import { OrderComboItem } from "@/core/domain/entities/OrderComboItem";
 import { OrderComboItemList } from "@/core/domain/entities/OrderComboItemList";
+import { OrderStatusEnum } from "@/core/domain/enums/OrderStatusEnum";
 import { PaymentMethodEnum } from "@/core/domain/enums/PaymentMethodEnum";
 import { IOrderRepository } from "@/core/interfaces/repositories/IOrderRepository";
 import { ICatalogService } from "@/core/interfaces/services/ICatalogService";
+import { IPaymentService } from "@/core/interfaces/services/IPaymentService";
+import { IStatusService } from "@/core/interfaces/services/IStatusService";
 
 import {
   CreateOrderUseCaseRequestDTO,
@@ -16,7 +20,9 @@ import {
 export class CreateOrderUseCase {
   constructor(
     private orderRepository: IOrderRepository,
-    private catalogService: ICatalogService
+    private catalogService: ICatalogService,
+    private statusService: IStatusService,
+    private paymentService: IPaymentService
   ) {}
 
   async execute({
@@ -78,7 +84,28 @@ export class CreateOrderUseCase {
 
     const createdOrder = await this.orderRepository.create(order);
 
-    return { order: createdOrder };
+    const createPaymentRequest: CreatePaymentRequest = {
+      orderId: createdOrder.id.toString(),
+      combos: createdCombos.map(({ createdCombo }) => ({
+        id: createdCombo.id,
+        name: createdCombo.name,
+        description: createdCombo.description,
+        price: Math.round(createdCombo.price * 100) / 100,
+        quantity: createdCombos.find(
+          (combo) => combo.createdCombo.id === createdCombo.id
+        )!.quantity,
+      })),
+    };
+
+    const { paymentDetails } =
+      await this.paymentService.createPayment(createPaymentRequest);
+
+    await this.statusService.updateOrderStatus({
+      orderId: createdOrder.id.toString(),
+      status: OrderStatusEnum.PENDING_PAYMENT,
+    });
+
+    return { order: createdOrder, paymentDetails };
   }
 
   private validateIfUserOrVisitorNameIsInformed(

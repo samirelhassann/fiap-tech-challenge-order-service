@@ -11,6 +11,8 @@ const envSchema = z.object({
   JWT_SECRET: z.string(),
   CATALOG_SERVICE_URL: z.string(),
   USER_SERVICE_URL: z.string(),
+  STATUS_SERVICE_URL: z.string(),
+  PAYMENT_SERVICE_URL: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);

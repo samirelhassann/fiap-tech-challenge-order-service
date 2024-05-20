@@ -7,11 +7,10 @@ import { getOrdersDocSchema } from "@/adapters/controllers/order/schema/GetOrder
 import { CreateOrderPresenter } from "@/adapters/presenters/order/CreateOrderPresenter";
 import { GetOrderByIdPresenter } from "@/adapters/presenters/order/GetOrderByIdPresenter";
 import { GetOrdersPresenter } from "@/adapters/presenters/order/GetOrdersPresenter";
-import { GetOrdersQueueFormatedPresenter } from "@/adapters/presenters/order/GetOrdersQueueFormatedPresenter";
-import { OrderWebHookPresenter } from "@/adapters/presenters/order/OrderWebHookPresenter";
-import { UpdateOrderStatusPresenter } from "@/adapters/presenters/order/UpdateOrderStatusPresenter";
 import { makeOrderRepository } from "@/adapters/repositories/PrismaRepositoryFactory";
 import { CatalogService } from "@/adapters/services/catalogService";
+import { PaymentService } from "@/adapters/services/paymentService";
+import { StatusService } from "@/adapters/services/statusService";
 import { UserService } from "@/adapters/services/userService";
 import { OrderUseCase } from "@/core/useCases/order/OrderUseCase";
 
@@ -20,26 +19,20 @@ export async function OrderRoutes(app: FastifyInstance) {
     new OrderUseCase(
       makeOrderRepository(),
       new CatalogService(),
-      new UserService()
+      new UserService(),
+      new StatusService(),
+      new PaymentService()
     ),
 
     new GetOrdersPresenter(),
-    new GetOrdersQueueFormatedPresenter(),
     new CreateOrderPresenter(),
-    new GetOrderByIdPresenter(),
-    new UpdateOrderStatusPresenter(),
-    new OrderWebHookPresenter()
+    new GetOrderByIdPresenter()
   );
 
   app.get("", {
     schema: getOrdersDocSchema,
     handler: orderController.getOrders.bind(orderController),
   });
-
-  // app.get("/queue", {
-  //   schema: getOrdersQueueFormatedDocSchema,
-  //   handler: orderController.getOrdersQueueFormated.bind(orderController),
-  // });
 
   app.get("/:id", {
     schema: getOrderByIdDocSchema,
@@ -50,15 +43,4 @@ export async function OrderRoutes(app: FastifyInstance) {
     schema: createOrderDocSchema,
     handler: orderController.createOrder.bind(orderController),
   });
-
-  // app.patch("/:id", {
-  //   schema: updateOrderStatusDocSchema,
-  //   handler: orderController.updateOrderStatus.bind(orderController),
-  //   onRequest: [verifyJwt(RoleEnum.ADMIN)],
-  // });
-
-  // app.post("/webhook", {
-  //   schema: orderWebHookDocSchema,
-  //   handler: orderController.webhook.bind(orderController),
-  // });
 }

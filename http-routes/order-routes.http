@@ -25,10 +25,9 @@ Authorization: Bearer {{token}}
 
 {
   "paymentMethod": "QR_CODE",
-  "paymentStatus": "PENDING_PAYMENT",
   "combos": [
     {
-      "sandwichId": "12313",
+      "sandwichId": "1",
       "drinkId": "9",
       "sideId": "7",
       "quantity": 2,

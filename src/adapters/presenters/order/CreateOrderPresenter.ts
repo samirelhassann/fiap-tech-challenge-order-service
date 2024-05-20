@@ -3,6 +3,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { createOrderPayloadSchema } from "@/adapters/controllers/order/schema/CreateOrderSchema";
+import { CreateOrderViewModel } from "@/adapters/controllers/order/viewModel/CreateOrderViewModel";
 import { MinimumResourcesNotReached } from "@/core/domain/base/errors/useCases/MinimumResourcesNotReached";
 import {
   CreateOrderUseCaseRequestDTO,
@@ -17,7 +18,8 @@ export class CreateOrderPresenter
   implements
     IControllerPresenter<
       CreateOrderUseCaseRequestDTO,
-      CreateOrderUseCaseResponseDTO
+      CreateOrderUseCaseResponseDTO,
+      CreateOrderViewModel
     >
 {
   convertToUseCaseDTO(req: FastifyRequest): CreateOrderUseCaseRequestDTO {
@@ -31,11 +33,21 @@ export class CreateOrderPresenter
     };
   }
 
+  convertToViewModel(
+    model: CreateOrderUseCaseResponseDTO
+  ): CreateOrderViewModel {
+    return {
+      id: model.order.id.toString(),
+      numberId: model.order.number.toString(),
+      paymentDetails: model.paymentDetails,
+    };
+  }
+
   async sendResponse(
     res: FastifyReply,
-    _useCaseResponseModel: CreateOrderUseCaseResponseDTO
+    response: CreateOrderUseCaseResponseDTO
   ) {
-    return res.status(201).send();
+    return res.status(201).send(this.convertToViewModel(response));
   }
 
   convertErrorResponse(error: Error, res: FastifyReply): FastifyReply {

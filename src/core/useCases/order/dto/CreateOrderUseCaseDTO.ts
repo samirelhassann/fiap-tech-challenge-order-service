@@ -17,4 +17,5 @@ export interface CreateOrderUseCaseRequestDTO {
 
 export interface CreateOrderUseCaseResponseDTO {
   order: Order;
+  paymentDetails?: string;
 }

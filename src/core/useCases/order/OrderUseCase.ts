@@ -3,6 +3,8 @@
 
 import { IOrderRepository } from "@/core/interfaces/repositories/IOrderRepository";
 import { ICatalogService } from "@/core/interfaces/services/ICatalogService";
+import { IPaymentService } from "@/core/interfaces/services/IPaymentService";
+import { IStatusService } from "@/core/interfaces/services/IStatusService";
 import { IUserService } from "@/core/interfaces/services/IUserService";
 
 import {
@@ -32,11 +34,15 @@ export class OrderUseCase implements IOrderUseCase {
   constructor(
     private orderRepository: IOrderRepository,
     private catalogService: ICatalogService,
-    private userService: IUserService
+    private userService: IUserService,
+    private statusService: IStatusService,
+    private paymentService: IPaymentService
   ) {
     this.createOrderUseCase = new CreateOrderUseCase(
       orderRepository,
-      catalogService
+      catalogService,
+      statusService,
+      paymentService
     );
     this.getOrdersUseCase = new GetOrdersUseCase(orderRepository);
     this.getOrderByIdUseCase = new GetOrderByIdUseCase(

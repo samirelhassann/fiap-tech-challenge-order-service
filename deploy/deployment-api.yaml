@@ -4,6 +4,7 @@ metadata:
   name: deployment-api
   labels:
     app: deployment-api
+  namespace: order-service
 spec:
   replicas: 1
   selector:
@@ -16,7 +17,7 @@ spec:
     spec:
       containers:
       - name: deployment-api
-        image: fiaptechchallenge03acr.azurecr.io/tech-challenge-03
+        image: fiaptechchallenge04acr.azurecr.io/tech-challenge-04-order-image
         imagePullPolicy: Always
         resources:
           limits:
@@ -31,31 +32,31 @@ spec:
             configMapKeyRef:
               name: api-config
               key: POSTGRES_URL
-        - name: MERCADO_PAGO_WEBHOOK_URL
+        - name: JWT_SECRET
           valueFrom:
             configMapKeyRef:
               name: api-config
-              key: MERCADO_PAGO_WEBHOOK_URL
-        - name: MERCADO_PAGO_API_HOST
+              key: JWT_SECRET
+        - name: USER_SERVICE_URL
           valueFrom:
             configMapKeyRef:
               name: api-config
-              key: MERCADO_PAGO_API_HOST
-        - name: MERCADO_PAGO_BEARER_TOKEN
+              key: USER_SERVICE_URL
+        - name: CATALOG_SERVICE_URL
           valueFrom:
             configMapKeyRef:
               name: api-config
-              key: MERCADO_PAGO_BEARER_TOKEN
-        - name: MERCADO_PAGO_USER_ID
+              key: CATALOG_SERVICE_URL
+        - name: STATUS_SERVICE_URL
           valueFrom:
             configMapKeyRef:
               name: api-config
-              key: MERCADO_PAGO_USER_ID
-        - name: MERCADO_PAGO_EXTERNAL_POS_ID
+              key: STATUS_SERVICE_URL
+        - name: PAYMENT_SERVICE_URL
           valueFrom:
             configMapKeyRef:
               name: api-config
-              key: MERCADO_PAGO_EXTERNAL_POS_ID
+              key: PAYMENT_SERVICE_URL
         
         # Probes
         # startupProbe:

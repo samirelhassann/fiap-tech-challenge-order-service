@@ -20,7 +20,6 @@ const orderComboSchema = z.object({
 export const createOrderPayloadSchema = z.object({
   visitorName: z.string().optional(),
   paymentMethod: z.nativeEnum(PaymentMethodEnum),
-  paymentStatus: z.nativeEnum(PaymentStatusEnum),
   paymentDetails: z.string().optional(),
   combos: z.array(orderComboSchema),
 });
