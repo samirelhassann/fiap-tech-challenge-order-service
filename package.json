@@ -12,9 +12,14 @@
     "build": "tsup src --out-dir build",
     "seed": "npx ts-node src/drivers/db/prisma/seed.ts",
     "lint": "eslint src",
-    "test": "vitest run",
-    "test-watch": "vitest",
-    "coverage": "vitest run --coverage",
+    "test": "vitest run --dir 'test/unit'",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage --dir 'test/unit'",
+    "test:create-prisma-environment": "pwd && cd ./test/bdd/prisma/vitest-environment-prisma && yarn link && cd ../../../",
+    "test:install-prisma-environment": "yarn link vitest-environment-prisma",
+    "pretest:bdd": "yarn test:create-prisma-environment && yarn test:install-prisma-environment",
+    "test:bdd": "vitest run --dir test/bdd",
+    "test:bdd:local": "docker-compose up -d && yarn test:bdd && docker-compose down",
     "sonar": "node sonar-project.js"
   },
   "prisma": {
@@ -34,7 +39,6 @@
     "eslint-plugin-prettier": "5.0.1",
     "eslint-plugin-unused-imports": "3.0.0",
     "install": "0.13.0",
-    "jsdom": "24.0.0",
     "prettier": "3.0.3",
     "prisma": "5.4.2",
     "sonarqube-scanner": "3.3.0",
@@ -42,7 +46,8 @@
     "tsx": "3.13.0",
     "typescript": "5.2.2",
     "vite-tsconfig-paths": "4.2.1",
-    "vitest": "1.3.1"
+    "vitest": "1.3.1",
+    "vitest-sonar-reporter": "2.0.0"
   },
   "dependencies": {
     "@fastify/cookie": "9.3.1",
