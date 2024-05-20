@@ -42,7 +42,6 @@ jobs:
   #         cat .env
   #     - run: yarn test:bdd
 
-
   sonarcloud-analysis:
     name: 🔍 SonarCloud Analysis
     needs: 
