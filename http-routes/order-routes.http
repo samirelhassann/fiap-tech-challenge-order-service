@@ -1,8 +1,7 @@
 @host = http://localhost:3003
-# @host = http://51.8.26.20
 @service-prefix = order-service
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJlZTdlNjkwNy0zOTUxLTRhMjYtYTYyMC1kMDVhOWQyMDIyZjQiLCJpYXQiOjE3MTYxNzYyNzMsImV4cCI6MTcxNjI2MjY3M30.2Pe2p_aSiJNH7DLao0UgvLyeflTujNLQ9d6UtY13Njg
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJlNjBhYTA2OC05YWNlLTQ0YTYtYTBjOC0xZjMxMGM3MDkzOTciLCJpYXQiOjE3MjA2NjY1OTYsImV4cCI6MTcyMDc1Mjk5Nn0.vxXw-xWwGnqHH6ccMdrT_4ypHeNstxfMqN-pI_cz1aI
 
 # @name get-orders
 GET {{host}}/{{service-prefix}}/orders

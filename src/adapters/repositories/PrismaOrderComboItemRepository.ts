@@ -1,6 +1,7 @@
 import { OrderComboItem } from "@/core/domain/entities/OrderComboItem";
 import { IOrderComboItemRepository } from "@/core/interfaces/repositories/IOrderComboItemRepository";
 import { prisma } from "@/drivers/db/prisma/config/prisma";
+import { PrismaClient } from "@prisma/client";
 
 import { PrismaOrderComboItemToDomainConverter } from "./converters/PrismaOrderComboItemToDomainConverter";
 
@@ -63,8 +64,12 @@ export class PrismaOrderComboItemRepository
       .then((c) => PrismaOrderComboItemToDomainConverter.convert(c));
   }
 
-  async createMany(orderComboItems: OrderComboItem[]): Promise<number> {
-    return prisma.orderComboItem
+  async createMany(
+    orderComboItems: OrderComboItem[],
+    tx?: PrismaClient
+  ): Promise<number> {
+    const client = tx || prisma;
+    return client.orderComboItem
       .createMany({
         data: orderComboItems.map((c) => ({
           order_id: c.orderId.toString(),

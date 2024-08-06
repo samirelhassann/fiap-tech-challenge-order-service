@@ -2,11 +2,19 @@ import { FastifyReply } from "fastify";
 
 import { EntityPropValidationError } from "@/core/domain/base/errors/entities/EntityPropValidationError";
 import { AttributeConflictError } from "@/core/domain/base/errors/useCases/AttributeConflictError";
+import { InternalServerError } from "@/core/domain/base/errors/useCases/InternalServerError";
 import { ResourceNotFoundError } from "@/core/domain/base/errors/useCases/ResourceNotFoundError";
 import { ValueObjectValidationError } from "@/core/domain/base/errors/valueObjects/ValueObjectValidationError";
 
 export abstract class ErrorHandlingPresenter {
   convertErrorResponse(error: Error, res: FastifyReply): FastifyReply {
+    if (error instanceof InternalServerError) {
+      return res.status(500).send({
+        message: error.message,
+        details: error.details ?? [],
+      });
+    }
+
     if (error instanceof ResourceNotFoundError) {
       return res.status(404).send({
         message: `${error.entity} not found.`,

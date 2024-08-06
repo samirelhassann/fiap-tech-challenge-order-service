@@ -4,6 +4,7 @@ import { OrderController } from "@/adapters/controllers/order/OrderController";
 import { createOrderDocSchema } from "@/adapters/controllers/order/schema/CreateOrderSchema";
 import { getOrderByIdDocSchema } from "@/adapters/controllers/order/schema/GetOrderByIdSchema";
 import { getOrdersDocSchema } from "@/adapters/controllers/order/schema/GetOrdersSchema";
+import { RabbitMQService } from "@/adapters/messaging/rabbitmq/RabbitMQService";
 import { CreateOrderPresenter } from "@/adapters/presenters/order/CreateOrderPresenter";
 import { GetOrderByIdPresenter } from "@/adapters/presenters/order/GetOrderByIdPresenter";
 import { GetOrdersPresenter } from "@/adapters/presenters/order/GetOrdersPresenter";
@@ -21,7 +22,9 @@ export async function OrderRoutes(app: FastifyInstance) {
       new CatalogService(),
       new UserService(),
       new StatusService(),
-      new PaymentService()
+      new PaymentService(),
+
+      RabbitMQService.getInstance()
     ),
 
     new GetOrdersPresenter(),

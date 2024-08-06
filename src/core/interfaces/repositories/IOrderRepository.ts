@@ -1,6 +1,7 @@
 import { PaginationParams } from "@/core/domain/base/PaginationParams";
 import { PaginationResponse } from "@/core/domain/base/PaginationResponse";
 import { Order } from "@/core/domain/entities/Order";
+import { PrismaClient } from "@prisma/client";
 
 export interface IOrderRepository {
   findMany(
@@ -15,5 +16,5 @@ export interface IOrderRepository {
 
   findById(id: string): Promise<Order | null>;
 
-  create(order: Order): Promise<Order>;
+  create(order: Order, tx?: PrismaClient): Promise<Order>;
 }

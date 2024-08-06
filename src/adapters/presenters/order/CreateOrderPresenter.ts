@@ -39,7 +39,6 @@ export class CreateOrderPresenter
     return {
       id: model.order.id.toString(),
       numberId: model.order.number.toString(),
-      paymentDetails: model.paymentDetails,
     };
   }
 

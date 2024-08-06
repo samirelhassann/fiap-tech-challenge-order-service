@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 
+import { IMessageQueueService } from "@/core/interfaces/messaging/IMessageQueueService";
 import { IOrderRepository } from "@/core/interfaces/repositories/IOrderRepository";
 import { ICatalogService } from "@/core/interfaces/services/ICatalogService";
 import { IPaymentService } from "@/core/interfaces/services/IPaymentService";
@@ -36,13 +37,15 @@ export class OrderUseCase implements IOrderUseCase {
     private catalogService: ICatalogService,
     private userService: IUserService,
     private statusService: IStatusService,
-    private paymentService: IPaymentService
+    private paymentService: IPaymentService,
+    private messageService: IMessageQueueService
   ) {
     this.createOrderUseCase = new CreateOrderUseCase(
       orderRepository,
       catalogService,
       statusService,
-      paymentService
+      paymentService,
+      messageService
     );
     this.getOrdersUseCase = new GetOrdersUseCase(orderRepository);
     this.getOrderByIdUseCase = new GetOrderByIdUseCase(

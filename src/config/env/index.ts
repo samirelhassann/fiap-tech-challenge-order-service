@@ -13,6 +13,15 @@ const envSchema = z.object({
   USER_SERVICE_URL: z.string(),
   STATUS_SERVICE_URL: z.string(),
   PAYMENT_SERVICE_URL: z.string(),
+
+  SWAGGER_DOCS_URL: z.string().default("/docs-swagger"),
+  REDOC_URL: z.string().default("/docs"),
+
+  RABBITMQ_URL: z.string(),
+  RABBITMQ_PORT: z.string(),
+  RABBITMQ_USER: z.string(),
+  RABBITMQ_PASSWORD: z.string(),
+  RABBITMQ_NEW_ORDER_QUEUE: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);

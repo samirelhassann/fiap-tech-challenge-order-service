@@ -5,6 +5,7 @@ import { Order } from "@/core/domain/entities/Order";
 import { IOrderComboItemRepository } from "@/core/interfaces/repositories/IOrderComboItemRepository";
 import { IOrderRepository } from "@/core/interfaces/repositories/IOrderRepository";
 import { prisma } from "@/drivers/db/prisma/config/prisma";
+import { PrismaClient } from "@prisma/client";
 
 import { PrismaOrderToDomainConverter } from "./converters/PrismaOrderToDomainConverter";
 
@@ -83,8 +84,9 @@ export class PrismaOrderRepository implements IOrderRepository {
     return PrismaOrderToDomainConverter.convert(order, combos);
   }
 
-  async create(order: Order): Promise<Order> {
-    const createdOrder = await prisma.order
+  async create(order: Order, tx?: PrismaClient): Promise<Order> {
+    const client = tx || prisma;
+    const createdOrder = await client.order
       .create({
         data: {
           id: order.id.toString(),
@@ -97,7 +99,10 @@ export class PrismaOrderRepository implements IOrderRepository {
       })
       .then((c) => PrismaOrderToDomainConverter.convert(c));
 
-    await this.orderComboItemRepository.createMany(order.combos.getItems());
+    await this.orderComboItemRepository.createMany(
+      order.combos.getItems(),
+      client
+    );
 
     DomainEvents.dispatchEventsForAggregate(order.id);
 
